@@ -2,7 +2,7 @@ package BayesianClassifier.bayes;
 
 public class tokenizer {
 
-	public String[] tokens(String input) {
+	public static String[] tokens(String input) {
 		String[] tokens = input.split(" ");
 		int i;
 		for (i = 0; i <= tokens.length; i++) {
@@ -10,5 +10,4 @@ public class tokenizer {
 		}
 		return tokens;
 	}
-
 }
