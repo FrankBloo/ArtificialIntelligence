@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Map;
 
 public class Classifier {
@@ -22,6 +23,7 @@ public class Classifier {
 				}
 			}
 			
+			
 		}
 		catch (ClassNotFoundException | IOException e) {
 			
@@ -34,7 +36,8 @@ public class Classifier {
 			if(file.exists()) {
 				file.delete();
 			}
-			
+			FileInputStream fis = FileInputStream(file);
+			ObjectOutputStream oos = new ObjectOutputStream(fis);
 		}
 		catch (IOException e) {
 			
