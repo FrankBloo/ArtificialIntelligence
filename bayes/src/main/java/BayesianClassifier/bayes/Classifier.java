@@ -2,6 +2,7 @@ package BayesianClassifier.bayes;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -22,8 +23,9 @@ public class Classifier {
 					System.err.println("Can not read classifications.bys!");
 				}
 			}
-			
-			
+			else {
+				//CREATE A NEW DATASET!!!
+			}
 		}
 		catch (ClassNotFoundException | IOException e) {
 			
@@ -36,8 +38,10 @@ public class Classifier {
 			if(file.exists()) {
 				file.delete();
 			}
-			FileInputStream fis = FileInputStream(file);
+			FileOutputStream fis = new FileOutputStream(file);
 			ObjectOutputStream oos = new ObjectOutputStream(fis);
+			oos.writeObject(dataSet);
+			oos.flush();
 		}
 		catch (IOException e) {
 			
