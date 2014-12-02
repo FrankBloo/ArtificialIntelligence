@@ -6,9 +6,13 @@ package BayesianClassifier.bayes;
  */
 public class App 
 {
+	public static BayesClassifier[] classifiers;
     public static void main( String[] args )
     {
-        System.out.println( "Hello World!" );
-        
+    	classifiers = new BayesClassifier[2];
+    	classifiers[0] = new BayesClassifier("M");
+    	classifiers[1] = new BayesClassifier("F");
+    	
+    	
     }
 }
