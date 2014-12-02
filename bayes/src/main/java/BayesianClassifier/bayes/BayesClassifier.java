@@ -8,7 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Map;
 
-public class Classifier {
+public class BayesClassifier {
 	public Map<Integer, String> dataSet;
 	
 	public void Start () {
@@ -46,5 +46,21 @@ public class Classifier {
 		catch (IOException e) {
 			
 		}
+	}
+
+	/**
+	 * Returns a description of the classifier.
+	 *
+	 * @return a description of the classifier as a string.
+	 */
+	public String toString() {
+		//These are just examples, modify to suit your algorithm
+		StringBuffer text = new StringBuffer();
+
+		text.append("Naive Bayes Classifier");
+
+		// append valid text here.
+
+		return text.toString();
 	}
 }
