@@ -10,8 +10,8 @@ public class App
     public static void main( String[] args )
     {
     	classifiers = new BayesClassifier[2];
-    	classifiers[0] = new BayesClassifier("M");
-    	classifiers[1] = new BayesClassifier("F");
+    	classifiers[0] = new BayesClassifier("M"+".bys");
+    	classifiers[1] = new BayesClassifier("F"+".bys");
     	
     	
     }
