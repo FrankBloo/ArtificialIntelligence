@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<datasetlist>
+		<dataset name="M" classifierFile="M.bys" trainFolder="res/blogtest/M" trainFormat="txt"/>
+		<dataset name="F" classifierFile="F.bys" trainFolder="res/blogtest/F" trainFormat="txt"/>
+	</datasetlist>
+</settings>
