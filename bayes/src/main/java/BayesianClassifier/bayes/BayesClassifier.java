@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BayesClassifier {
-	public Map<Integer, String> dataSet;
+	private Map<Integer, String> dataSet;
 	private String filename = null;
 	private boolean isTrained = false;
 
@@ -36,8 +36,12 @@ public class BayesClassifier {
 	public boolean getTrainedStatus(){
 		return this.isTrained;
 	}
+
+	public Map<Integer, String> getDataset(){
+		return this.dataSet;
+	}
 	
-	public void Exit() {
+	public void removeDataset() {
 		try {
 			File file = new File(this.filename);
 			if(file.exists()) {
@@ -45,7 +49,7 @@ public class BayesClassifier {
 			}
 			FileOutputStream fis = new FileOutputStream(file);
 			ObjectOutputStream oos = new ObjectOutputStream(fis);
-			oos.writeObject(this.dataSet);
+			oos.writeObject(this.getDataset());
 			oos.flush();
 		}
 		catch (IOException e) {
