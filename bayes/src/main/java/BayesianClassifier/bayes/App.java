@@ -54,17 +54,19 @@ public class App {
 					}
 				}
 			} catch (SAXException | IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.err.println("Something went wrong reading the settings.xml file");
+				System.exit(1);
 			}
-
-			classifiers = new BayesClassifier[2];
+			
+			//Try outputting the data to the Classifier now
+			
+			/*classifiers = new BayesClassifier[2];
 			classifiers[0] = new BayesClassifier("M");
 			classifiers[1] = new BayesClassifier("F");
 
 			if (classifiers[0].getTrainedStatus()) {
 
-			}
+			}*/
 		} catch (ParserConfigurationException e) {
 
 		}
