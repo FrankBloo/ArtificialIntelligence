@@ -11,6 +11,7 @@ package BayesianClassifier.bayes.Arff;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 import weka.core.Attribute;
@@ -20,10 +21,10 @@ import weka.core.Instances;
 
 public class ArffGenerator {
 
-	public Instances createDataset(String directoryPath) throws Exception {
+	public Instances createDataset(String directoryPath) throws IOException {
 
 		FastVector atributes = new FastVector(2);
-		atributes.addElement(new Attribute("filename", (FastVector) null));
+		atributes.addElement(new Attribute("fileName", (FastVector) null));
 		atributes.addElement(new Attribute("contents", (FastVector) null));
 		Instances data = new Instances("text_files_in_" + directoryPath,
 				atributes, 0);
@@ -48,7 +49,7 @@ public class ArffGenerator {
 					newInst[1] = (double) data.attribute(1).addStringValue(
 							text.toString());
 					data.add(new Instance(1.0, newInst));
-				} catch (Exception e) {
+				} catch (IOException e) {
 				}
 			}
 		}
