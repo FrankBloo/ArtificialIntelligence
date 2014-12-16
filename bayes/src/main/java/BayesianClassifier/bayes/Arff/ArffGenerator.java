@@ -1,3 +1,12 @@
+/*
+ *    TextDirectoryToArff.java
+ *    Copyright (C) 2002 Richard Kirkby
+ *
+ *	  This script is based on the work of Richard Kirby.
+ *
+ */
+
+
 package BayesianClassifier.bayes.Arff;
 
 import java.io.File;
