@@ -3,20 +3,26 @@
  *    Copyright (C) 2002 Richard Kirkby
  *
  *	  This script is based on the work of Richard Kirby.
+ *    http://weka.wikispaces.com/ARFF+files+from+Text+Collections
  *
  */
 
 
 package BayesianClassifier.bayes.Arff;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 
 import weka.core.Attribute;
 import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
+import weka.core.converters.ArffSaver;
 
 public class ArffGenerator {
 
@@ -24,7 +30,7 @@ public class ArffGenerator {
 
 		FastVector atributes = new FastVector(2);
 		atributes.addElement(new Attribute("filename", (FastVector) null));
-		atributes.addElement(new Attribute("contents", (FastVector) null));
+		atributes.addElement(new Attribute("filename", (FastVector) null));
 		Instances data = new Instances("text_files_in_" + directoryPath,
 				atributes, 0);
 
@@ -40,7 +46,8 @@ public class ArffGenerator {
 							+ files[i]);
 					InputStreamReader is;
 					is = new InputStreamReader(new FileInputStream(txt));
-					StringBuffer text = new StringBuffer();
+					StringBuffer
+					text = new StringBuffer();
 					int k;
 					while ((k = is.read()) != -1) {
 						text.append((char) k);
@@ -53,5 +60,29 @@ public class ArffGenerator {
 			}
 		}
 		return data;
+	}
+	
+	public static void main(String[] args) {
+		if (args.length == 2) {
+			ArffGenerator tdta = new ArffGenerator();
+			try {
+				Instances dataset = tdta.createDataset(args[0]);
+				ArffSaver saver = new ArffSaver();
+				saver.setInstances(dataset);
+				File outputFile = new File(args[1]);
+				FileOutputStream fos = new FileOutputStream(outputFile);
+				//saver.setFile(outputFile);
+				saver.setDestination(fos);
+				saver.writeBatch();
+				
+				System.out.println(dataset);
+			} catch (Exception e) {
+				System.err.println(e.getMessage());
+				e.printStackTrace();
+			}
+		} else {
+			System.out
+					.println("Usage: java TextDirectoryToArff <directory name>");
+		}
 	}
 }
