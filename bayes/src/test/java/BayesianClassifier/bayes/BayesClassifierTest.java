@@ -3,11 +3,14 @@ package BayesianClassifier.bayes;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * Tests the BayesClassifier by loading some data in it and printing the classification results.
+ * <p/>
  * Created by kevin on 12/2/14.
  */
 public class BayesClassifierTest {
@@ -40,13 +43,8 @@ public class BayesClassifierTest {
                 "I am afraid of failing Biology. I am also equally afraid of failing Calculus. Whatever I get in either of those classes should not matter because I'm going to retake them either in college, or in the case of the hated Calculus, I will be taking it over the summer.  What will happen if Rutgers rescinds my offer of admission:  1. I will be disowned. 2. I will be without a roommate. 3. Sarah will hate me for life. 4. I will be nothing, and nobody. 5. It won't matter because I am dead.  There seem to be no pros to this situation, so we'll all move on.  What I need to do:  (It's too late to accept anything but the usual F on my next bio thing. But I can complete the worksheets and make an attempt to BS stuff. The worksheets might also help me study. Count on me being up until a really hellish hour.)  I have also written the world's crappiest poem. And afterward, I think that I should eat cheese. Yes. Cheese. Moving On ... " +
                 "I am stuck on the plot for Sanguine Fortress. Every problem I solve creates a new one. Did you know that this hunk of junk is the largest project I have ever attempted? I won't say more than that ... I'd jinx myself.  What was today? (Two Ap exams in a row, pizza, gerbils and a very wise saying.) Samantha Figueroa asked me what I wanted to do in Spanish class yesterday, and I told her I want to make it possible for more Americans to have health insurance.  So she said to me, \"I don't know what you feel about what's up there ... but you know, you'd get mad points with him.\" And that got me thinking more than anything else ... is there a God? I honestly don't know what to think anymore. I'm so FRIED.  Anyway ... everytime I write SF I feel better, although it's thoroughly depressing at the same time. So I'm going to keep going. And hopefully, sometime, I can read my work and say, \"Well ... I've gotten a damn sight better since then.\" ";
 
-        for(String word : maleString.split(" ")){
-            maleTrainingMap.add(word);
-        }
-
-        for(String word : femaleString.split(" ")){
-            femaleTrainingMap.add(word);
-        }
+        Collections.addAll(maleTrainingMap, Tokenizer.tokens(maleString));
+        Collections.addAll(femaleTrainingMap, Tokenizer.tokens(femaleString));
     }
 
 
@@ -57,36 +55,36 @@ public class BayesClassifierTest {
 
         HashMap<String, HashMap<String, HashMap<String, Integer>>> dataset = bc.getDataset();
 
-        for(String key : dataset.keySet()){
-            System.out.println(key+":");
-            for(String key2 : dataset.get(key).keySet()){
-                System.out.println("    "+key2+":");
-                for(String key3 : dataset.get(key).get(key2).keySet()){
+        for (String key : dataset.keySet()) {
+            System.out.println(key + ":");
+            for (String key2 : dataset.get(key).keySet()) {
+                System.out.println("    " + key2 + ":");
+                for (String key3 : dataset.get(key).get(key2).keySet()) {
                     Integer occurrences = dataset.get(key).get(key2).get(key3);
-                    System.out.println("        "+key3+": "+occurrences);
+                    System.out.println("        " + key3 + ": " + occurrences);
                 }
             }
         }
     }
 
     @Test
-    public void testCategorization() throws Exception{
+    public void testCategorization() throws Exception {
         bc.updateGroup("M", maleTrainingMap);
         bc.updateGroup("F", femaleTrainingMap);
         HashMap<String, List<String>> resM = bc.classifyGroup(maleTrainingMap);
         HashMap<String, List<String>> resF = bc.classifyGroup(femaleTrainingMap);
 
-        for(String key : resM.keySet()){
-            System.out.println(key+": ");
-            for(String word : resM.get(key)){
-                System.out.println("    "+word+" (male)");
+        for (String key : resM.keySet()) {
+            System.out.println(key + ": ");
+            for (String word : resM.get(key)) {
+                System.out.println("    " + word + " (male)");
             }
         }
 
-        for(String key : resF.keySet()){
-            System.out.println(key+": ");
-            for(String word : resF.get(key)){
-                System.out.println("    "+word+" (female)");
+        for (String key : resF.keySet()) {
+            System.out.println(key + ": ");
+            for (String word : resF.get(key)) {
+                System.out.println("    " + word + " (female)");
             }
         }
     }
