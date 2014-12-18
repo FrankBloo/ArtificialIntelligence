@@ -6,11 +6,11 @@
  *
  */
 
-
 package BayesianClassifier.bayes.Arff;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -18,6 +18,7 @@ import weka.core.Attribute;
 import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
+import weka.core.converters.ArffSaver;
 
 public class ArffGenerator {
 
@@ -54,5 +55,29 @@ public class ArffGenerator {
 			}
 		}
 		return data;
+	}
+
+	public static void main(String[] args) {
+		if (args.length == 2) {
+			NewArffGenerator tdta = new NewArffGenerator();
+			try {
+				Instances dataset = tdta.createDataset(args[0]);
+				ArffSaver saver = new ArffSaver();
+				saver.setInstances(dataset);
+				File outputFile = new File(args[1]);
+				FileOutputStream fos = new FileOutputStream(outputFile);
+				// saver.setFile(outputFile);
+				saver.setDestination(fos);
+				saver.writeBatch();
+
+				System.out.println(dataset);
+			} catch (Exception e) {
+				System.err.println(e.getMessage());
+				e.printStackTrace();
+			}
+		} else {
+			System.out
+					.println("Usage: java TextDirectoryToArff <directory name>");
+		}
 	}
 }

@@ -57,7 +57,6 @@ public class NewArffGenerator {
 					}
 
 					data.add(new Instance(1.0, newInst));
-					is.close();
 				} catch (IOException e) {
 				}
 			}
