@@ -1,11 +1,19 @@
 package BayesianClassifier.bayes;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 
 public class Tokenizer {
 
+    public static void main(String[] args) {
+        String in = "This is a string with \n backslashes \\\\ \\ Hello.";
+
+        System.out.println("in = [" + Arrays.toString(tokens(in)) + "]");
+    }
+
     public static String[] tokens(String input) {
-        input = input.replaceAll("['\\\".,?/;:_()\\[\\]&-]", "");
+        input = input.replace("\n", "");
+        input = input.replaceAll("['\".,?/\\\\;:_()\\[\\]&-]", "");
         input = input.replace("$", " $ ");
         input = input.replace("€", " € ");
         input = input.replace("%", " % ");
