@@ -9,10 +9,8 @@ import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 public class BayesClassifier {
-	private Map<Integer, String> dataset;
 	private String filename = null;
 	private boolean isTrained = false;
 
@@ -21,62 +19,65 @@ public class BayesClassifier {
 	private int totalClassCount = 0;
 	private HashMap<String, Integer> instancesPerClass = new HashMap<>();
 
-	public BayesClassifier(String filename){
+	public BayesClassifier(String filename) {
 		this.filename = filename;
 
-		try{
+		try {
 			File file = new File(filename);
-			if(file.exists()) {
+			if (file.exists()) {
 				FileInputStream fis = new FileInputStream(file);
 				ObjectInputStream ois = new ObjectInputStream(fis);
-				this.frequencyTable = (HashMap<String, HashMap<String, HashMap<String, Integer>>>) ois.readObject();
+				Object o = ois.readObject();
+				if (o instanceof HashMap) {
+					this.frequencyTable = (HashMap<String, HashMap<String, HashMap<String, Integer>>>) o;
+				}
 				this.isTrained = true;
-			}else{
+			} else {
 				this.frequencyTable = new HashMap<>();
 			}
-		}catch(ClassNotFoundException | IOException | ClassCastException e){
-			System.out.println("Crash. Error: "+e.getClass().getName()+": "+e.getLocalizedMessage());
+		} catch (ClassNotFoundException | IOException | ClassCastException e) {
+			System.out.println("Crash. Error: " + e.getClass().getName() + ": "
+					+ e.getLocalizedMessage());
 			System.exit(1);
 		}
 	}
 
-	public boolean getTrainedStatus(){
+	public boolean getTrainedStatus() {
 		return this.isTrained;
 	}
 
-	public HashMap<String, HashMap<String, HashMap<String, Integer>>> getDataset(){
+	public HashMap<String, HashMap<String, HashMap<String, Integer>>> getDataset() {
 		return this.frequencyTable;
 	}
-	
+
 	public void removeDataset() {
 		try {
 			File file = new File(this.filename);
-			if(file.exists()) {
+			if (file.exists()) {
 				file.delete();
 			}
 			FileOutputStream fis = new FileOutputStream(file);
 			ObjectOutputStream oos = new ObjectOutputStream(fis);
 			oos.writeObject(this.getDataset());
 			oos.flush();
-		}
-		catch (IOException e) {
-			
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
 		}
 	}
 
-	public void updateGroup(String classifier, List<String> words){
-		for(String word : words){
+	public void updateGroup(String classifier, List<String> words) {
+		for (String word : words) {
 			this.update(classifier, "word", word);
 		}
 	}
 
-	public HashMap<String, List<String>> classifyGroup(List<String> words){
-		HashMap<String,List<String>> result = new HashMap<>();
+	public HashMap<String, List<String>> classifyGroup(List<String> words) {
+		HashMap<String, List<String>> result = new HashMap<>();
 
-		for(String word : words){
+		for (String word : words) {
 			String classifier = this.classify("word", word);
 			List<String> list = new LinkedList<>();
-			if(result.get(classifier) != null){
+			if (result.get(classifier) != null) {
 				list = result.get(classifier);
 			}
 			list.add(word);
@@ -86,31 +87,37 @@ public class BayesClassifier {
 		return result;
 	}
 
-	public void update(String classifier, String attribute, String value){
+	public void update(String classifier, String attribute, String value) {
 		// Increment total instance count
 		this.totalInstanceCount++;
 
-		if(this.instancesPerClass.get(classifier) == null) {
-			// This class is not in the map yet. Add it and increment class counter
+		if (this.instancesPerClass.get(classifier) == null) {
+			// This class is not in the map yet. Add it and increment class
+			// counter
 			this.totalClassCount++;
 			this.instancesPerClass.put(classifier, 1);
-			this.frequencyTable.put(classifier, new HashMap<String, HashMap<String, Integer>>());
+			this.frequencyTable.put(classifier,
+					new HashMap<String, HashMap<String, Integer>>());
 		}
 
 		// Classifier now sure to exist.
 		// Skip missing values
-		if(!value.equals("?")){
-			if(this.frequencyTable.get(classifier).get(attribute) != null){
-				HashMap<String, Integer> val = this.frequencyTable.get(classifier).get(attribute);
-				if(val.get(value) != null){
+		if (!value.equals("?")) {
+			if (this.frequencyTable.get(classifier).get(attribute) != null) {
+				HashMap<String, Integer> val = this.frequencyTable.get(
+						classifier).get(attribute);
+				if (val.get(value) != null) {
 					// Attribute and value exist. Increment it
-					Integer freq = this.frequencyTable.get(classifier).get(attribute).get(value);
-					this.frequencyTable.get(classifier).get(attribute).put(value, freq+1);
-				}else{
-					// Attribute exists but value doesnt. Create it
-					this.frequencyTable.get(classifier).get(attribute).put(value, 1);
+					Integer freq = this.frequencyTable.get(classifier)
+							.get(attribute).get(value);
+					this.frequencyTable.get(classifier).get(attribute)
+							.put(value, freq + 1);
+				} else {
+					// Attribute exists but value doesn't. Create it
+					this.frequencyTable.get(classifier).get(attribute)
+							.put(value, 1);
 				}
-			}else{
+			} else {
 				// Attribute does not exist, add it with a new value.
 				HashMap<String, Integer> val = new HashMap<>();
 				val.put(value, 1);
@@ -120,30 +127,34 @@ public class BayesClassifier {
 
 	}
 
-	public String classify(String attribute, String value){
-		int m = 2; 						// Control for lapace-estimates
-		int k = 1; 						// Control for M-estimates
-		double likelihood = -100000; 	// Initial, impossible, likelihood
+	public String classify(String attribute, String value) {
+		int m = 2; // Control for laplace-estimates
+		int k = 1; // Control for M-estimates
+		double likelihood = -100000; // Initial, impossible, likelihood
 		String result = null;
 
-		for(String classifier : this.instancesPerClass.keySet()){
+		for (String classifier : this.instancesPerClass.keySet()) {
 			Integer instances = this.instancesPerClass.get(classifier);
 
-			double prior = (instances + k) / (this.totalInstanceCount + (k * this.totalClassCount));
+			double prior = ((double) instances + (double) k)
+					/ ((double) this.totalInstanceCount + ((double) k * (double) this.totalClassCount));
 			double temp = Math.log(prior); // Use logs for small values
 
 			// Skip missing values
-			if(!value.equals("?")){
-				Integer valueCount = this.frequencyTable.get(classifier).get(attribute).get(value);
-				if(valueCount == null){
+			if (!value.equals("?")) {
+				Integer valueCount = this.frequencyTable.get(classifier)
+						.get(attribute).get(value);
+				if (valueCount == null) {
 					valueCount = 0;
 				}
-				double inc = (valueCount + (m * prior)) / (instances + m); // P[Ei | H]
+				double inc = (valueCount + (m * prior)) / (instances + m); // P[Ei
+																			// |
+																			// H]
 				temp += Math.log(inc); // Adding log s= multiplication
 			}
 
 			// Check if we have a better likelihood
-			if(temp >= likelihood){
+			if (temp >= likelihood) {
 				likelihood = temp;
 				result = classifier;
 			}
@@ -152,21 +163,16 @@ public class BayesClassifier {
 		return result;
 	}
 
-
-
 	/**
 	 * Returns a description of the classifier.
 	 *
 	 * @return a description of the classifier as a string.
 	 */
 	public String toString() {
-		//These are just examples, modify to suit your algorithm
-		StringBuffer text = new StringBuffer();
-
-		text.append("Naive Bayes Classifier");
+		// These are just examples, modify to suit your algorithm
 
 		// append valid text here.
 
-		return text.toString();
+		return "Naive Bayes Classifier";
 	}
 }

@@ -1,7 +1,6 @@
 package BayesianClassifier.bayes;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -19,7 +18,6 @@ import BayesianClassifier.bayes.Generic.ClassifierWrapper;
 
 /**
  * Hello world!
- *
  */
 public class App {
 	public static BayesClassifier[] classifiers;
@@ -28,7 +26,7 @@ public class App {
 		try {
 			// Read settings from a XML File
 			File file = new File("settings.xml");
-			ArrayList<ClassifierWrapper> classifierList = new ArrayList<ClassifierWrapper>();
+			ArrayList<ClassifierWrapper> classifierList = new ArrayList<>();
 			if (!file.exists()) {
 				System.out.println("The settings file could not be found!");
 				System.exit(1);
@@ -46,29 +44,31 @@ public class App {
 								i,
 								new ClassifierWrapper(dataElem
 										.getAttribute("name")));
-						classifierList.get(i).setFileName(dataElem
-										.getAttribute("classifierFile"));
-						classifierList.get(i).setTrainFolder(dataElem
-								.getAttribute("trainFolder"), dataElem
-								.getAttribute("trainFormat"));
+						classifierList.get(i).setFileName(
+								dataElem.getAttribute("classifierFile"));
+						classifierList.get(i).setTrainFolder(
+								dataElem.getAttribute("trainFolder"),
+								dataElem.getAttribute("trainFormat"));
 					}
 				}
 			} catch (SAXException | IOException e) {
-				System.err.println("Something went wrong reading the settings.xml file");
+				System.err
+						.println("Something went wrong reading the settings.xml file");
 				System.exit(1);
 			}
-			
-			//Try outputting the data to the Classifier now
-			
-			/*classifiers = new BayesClassifier[2];
-			classifiers[0] = new BayesClassifier("M");
-			classifiers[1] = new BayesClassifier("F");
 
-			if (classifiers[0].getTrainedStatus()) {
+			// Try outputting the data to the Classifier now
 
-			}*/
+			/*
+			 * classifiers = new BayesClassifier[2]; classifiers[0] = new
+			 * BayesClassifier("M"); classifiers[1] = new BayesClassifier("F");
+			 * 
+			 * if (classifiers[0].getTrainedStatus()) {
+			 * 
+			 * }
+			 */
 		} catch (ParserConfigurationException e) {
-
+			System.out.println(e.getMessage());
 		}
 	}
 }

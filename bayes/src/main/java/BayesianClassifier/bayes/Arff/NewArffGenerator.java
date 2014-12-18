@@ -11,7 +11,6 @@ import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.converters.ArffSaver;
-import BayesianClassifier.bayes.tokenizer;
 
 public class NewArffGenerator {
 
@@ -48,7 +47,8 @@ public class NewArffGenerator {
 					newInst[1] = (double) data.attribute(1).addStringValue(
 							text.toString());
 
-					String[] tokens = tokenizer.tokens(text.toString());
+					String[] tokens = BayesianClassifier.bayes.Tokenizer
+							.tokens(text.toString());
 
 					for (String t : tokens) {
 						if (!atributes.contains(new Attribute(t))) {
