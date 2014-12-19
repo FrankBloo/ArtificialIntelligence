@@ -16,26 +16,23 @@ public class NewArffGenerator {
 
 	public Instances createDataset(String directoryPath) throws IOException {
 
-		FastVector atributes = new FastVector();
+		boolean firstRun = true;
 
-		atributes.addElement(new Attribute("test"));
-		atributes.addElement(new Attribute("Hoi"));
-		atributes.addElement(new Attribute("lol"));
-		atributes.addElement(new Attribute("temp"));
+		FastVector atributes = new FastVector();
 
 		Instances data = new Instances("text_files_in_" + directoryPath,
 				(FastVector) atributes, 0);
 
 		File directory = new File(directoryPath);
 		String[] files = directory.list();
+
 		for (int i = 0; i < files.length; i++) {
 			if (files[i].endsWith(".txt")) {
 				try {
-					double[] newInst = new double[2];
-					newInst[0] = (double) data.attribute(0).addStringValue(
-							files[i]);
+
 					File txt = new File(directoryPath + File.separator
 							+ files[i]);
+
 					InputStreamReader is;
 					is = new InputStreamReader(new FileInputStream(txt));
 					StringBuffer text = new StringBuffer();
@@ -44,18 +41,45 @@ public class NewArffGenerator {
 						text.append((char) k);
 
 					}
-					newInst[1] = (double) data.attribute(1).addStringValue(
-							text.toString());
 
 					String[] tokens = BayesianClassifier.bayes.Tokenizer
 							.tokens(text.toString());
 
-					for (String t : tokens) {
-						if (!atributes.contains(new Attribute(t))) {
-							atributes.addElement(new Attribute(t));
-						}
-					}
+					double[] newInst = new double[tokens.length];
 
+					// newInst[0] = (double)
+					// data.attribute(0).addStringValue(files[i]);
+
+					for (int j = 0; j < tokens.length; j++) {
+						// add the @attribute elements for each distinctive
+						// word
+						if (!atributes.contains(new Attribute(tokens[j]))) {
+							atributes.addElement(new Attribute(tokens[j]));
+						}
+						int temp = atributes.indexOf(new Attribute(tokens[j]));
+						String tempString = String.valueOf(temp);
+
+						newInst[j] = (double) data.attribute(temp)
+								.addStringValue(tempString);
+
+						// System.out.println(tempString);
+						// System.out.println(newInst[j]);
+					}
+					/*
+					 * } else { String temp = ""; for (String t : tokens) { //
+					 * add the word variables to the @data segment
+					 * 
+					 * temp += atributes.indexOf(t);
+					 * 
+					 * } // data.add(new Instance(atributes.indexOf(new //
+					 * Attribute(t)), newInst));
+					 * 
+					 * 
+					 * }
+					 */
+
+					// newInst[1] = (double)
+					// data.attribute(1).addStringValue(text.toString());
 					data.add(new Instance(1.0, newInst));
 				} catch (IOException e) {
 				}

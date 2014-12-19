@@ -38,6 +38,9 @@ public class ArffGenerator {
 					double[] newInst = new double[2];
 					newInst[0] = (double) data.attribute(0).addStringValue(
 							files[i]);
+
+					System.out.println(data.attribute(0).addStringValue(
+							files[i]));
 					File txt = new File(directoryPath + File.separator
 							+ files[i]);
 					InputStreamReader is;
