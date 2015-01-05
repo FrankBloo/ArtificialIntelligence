@@ -91,7 +91,7 @@ public class Classify {
         }
 
         System.out.println("\nTraining results:");
-        System.out.println(String.valueOf(classifier.getDataset()));
+        //System.out.println(String.valueOf(classifier.getDataset()));
 
         // Testing stage
         HashMap<String, HashMap<String, LinkedList<String>>> types = new HashMap<>();
