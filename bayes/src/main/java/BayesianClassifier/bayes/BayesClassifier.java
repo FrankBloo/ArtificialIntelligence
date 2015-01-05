@@ -139,13 +139,13 @@ public class BayesClassifier {
                 temp += Math.log(inc); // Adding log s= multiplication
             }
 
-            System.out.println(String.valueOf(temp));
+            //System.out.println(String.valueOf(temp));
 
             // Check if we have a better likelihood
             if (temp >= likelihood) {
                 likelihood = temp;
                 result = classifier;
-                System.out.println("Switch to "+classifier);
+                //System.out.println("Switch to "+classifier);
             }
         }
 
