@@ -18,13 +18,14 @@ pom.xml.versionsBackup
 pom.xml.next
 release.properties
 
+# IntelliJ
 .classpath
 .project
 *.iml
 .settings/
 .idea/
 
-# eclipse specific git ignore
+# Eclipse
 *.pydevproject
 .project
 .metadata
@@ -39,6 +40,7 @@ local.properties
 .classpath
 .settings/
 .loadpath
+
 
 # External tool builders
 .externalToolBuilders/
